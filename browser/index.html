@@ -11,17 +11,24 @@
     <script src="/js/player/player.controller.js" defer></script>
     <script src="/js/player/player.factory.js" defer></script>
     <script src="/js/sidebar/sidebar.controller.js" defer></script>
+    <script src="/js/artist/artist.controller.js" defer></script>
+    <script src="/js/artist/artist.factory.js" defer></script>
   </head>
   <body ng-app="juke">
     <div id="main" class="container-fluid">
 
       <div class="col-xs-2">
-        <sidebar>
+        <sidebar ng-controller="SidebarCtrl">
           <img src="juke.svg" class="logo">
           <section>
             <h4 class="menu-item active">
-              <a href="#" ng-controller = "SidebarCtrl" ng-click="viewAlbums()">ALBUMS</a>
+              <a href="#"  ng-click="viewAlbums()">ALBUMS</a>
             </h4>
+          </section>
+          <section>
+            <h5 class="playlist-item">
+              <a ng-click="viewAllArtists()" href="#">ARTISTS</a>
+            </h5>
           </section>
         </sidebar>
       </div>
@@ -73,7 +80,63 @@
   
           </div>
         </div>
-      </div>wO
+
+        <div ng-controller = "ArtistCtrl" ng-show = "showMe">
+          <h3>Artists</h3>
+            <div class="list-group">
+              <div class="list-group-item" ng-repeat="artist in artists">
+              <a href="#" ng-click="showOneArtist(artist.id)">{{ artist.name }}</a>
+            </div>
+          </div>
+        </div>
+
+        <div ng-controller="SingleArtistCtrl" ng-show="showMe">
+          <h3>{{artist.name}}</h3>
+
+          <div class="row">
+            <div class="col-xs-4" ng-repeat="album in albums()">
+              <a class="thumbnail" href="#" >
+                <img ng-src="{{ album.imageURL }}">
+                <div class="caption">
+                  <h5>
+                    <span>{{album.name}}</span>
+                  </h5>
+
+                </div>
+              </a>
+            </div>
+  
+          </div>
+
+<!--       <h4 ng-repeat="artistSong in artistSongs()">{{artistSong.name}}</h4> 
+ -->
+        
+        <table class='table' >
+            <thead>
+              <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Artists</th>
+                <th>Genre</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="artistSong in artistSongs()" ng-class="{active: artistSong === playingSong()}">
+                <td>
+                  <button class="btn btn-default btn-xs" ng-click="toggle(artistSong, artistSongs())">
+                    <span class="glyphicon" ng-class="{'glyphicon-pause': isPlaying() && artistSong === playingSong(), 'glyphicon-play': artistSong !== playingSong() || !isPlaying()}"></span>
+                  </button>
+                </td>
+                <td>{{ artistSong.name }}</td>
+                <td><span ng-repeat="artist in artistSong.artists">{{ artist.name}}{{ $last ? '' : ', ' }}</span></td>
+                <td>{{ artistSong.genre }}</td>
+              </tr>
+            </tbody>
+          </table>
+       
+
+        </div>
+      </div>
 
       <footer>
         <div ng-show="currentSong()" ng-controller="PlayerCtrl">

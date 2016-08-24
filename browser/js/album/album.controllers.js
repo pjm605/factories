@@ -35,7 +35,7 @@ juke.controller('AlbumCtrl', function ($scope, $http, $rootScope, $log, StatsFac
   };
 
   $scope.$on('viewSwap', function(event, data) {
-    console.log(data.albumId);
+
     $scope.showMe = (data.name === 'oneAlbum');
     if (data.name === 'oneAlbum'){
       AlbumFactory.fetchById(data.albumId)
@@ -82,7 +82,7 @@ juke.controller('AlbumCtrl', function ($scope, $http, $rootScope, $log, StatsFac
 juke.controller('AllCtrl', function($scope, $http, $rootScope, $log, AlbumFactory){
   $scope.$on('viewSwap', function (event, data) {
     $scope.showMe = (data.name === 'allAlbums');
-    console.log($scope.showMe)
+    
   });
 
   $scope.viewOneAlbum = function(id) {
