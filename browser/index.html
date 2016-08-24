@@ -20,14 +20,14 @@
           <img src="juke.svg" class="logo">
           <section>
             <h4 class="menu-item active">
-              <a href="#" ng-click="viewAlbums()">ALBUMS</a>
+              <a href="#" ng-controller = "SidebarCtrl" ng-click="viewAlbums()">ALBUMS</a>
             </h4>
           </section>
         </sidebar>
       </div>
 
       <div class="col-xs-10">
-        <div class="album" ng-controller="AlbumCtrl" ng-show="false">
+        <div class="album" ng-controller="AlbumCtrl" ng-show="showMe">
           <p>
             <h3>{{ album.name }} </h3>
 
@@ -60,7 +60,7 @@
           <h3>Albums</h3>
           <div class="row">
             <div class="col-xs-4" ng-repeat="album in albums">
-              <a class="thumbnail" href="#">
+              <a class="thumbnail" href="#" ng-click="viewOneAlbum(album.id)">
                 <img ng-src="{{ album.imageUrl }}">
                 <div class="caption">
                   <h5>
@@ -70,20 +70,10 @@
                 </div>
               </a>
             </div>
-           <!--  <div class="col-xs-4">
-              <a class="thumbnail" href="#">
-                <img src="http://placeholdit.imgix.net/~text?txtsize=33&txt=ALBUMtwoIMAGE&w=300&h=300">
-                <div class="caption">
-                  <h5>
-                    <span>ALBUM TWO NAME HERE</span>
-                  </h5>
-                  <small>NUMBER OF SONGS HERE songs</small>
-                </div>
-              </a>
-            </div> -->
+  
           </div>
         </div>
-      </div>
+      </div>wO
 
       <footer>
         <div ng-show="currentSong()" ng-controller="PlayerCtrl">

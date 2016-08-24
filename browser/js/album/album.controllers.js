@@ -8,8 +8,37 @@ juke.controller('AlbumCtrl', function ($scope, $http, $rootScope, $log, StatsFac
   AlbumFactory.fetchAll()
     .then(function (albums) {
       $scope.albums = albums;
+     
+    })
+ 
 
-    AlbumFactory.fetchById(albums)
+  $scope.playingSong = function () {
+    return PlayerFactory.getCurrentSong();
+  }
+
+  $scope.isPlaying = function () {
+    return PlayerFactory.isPlaying();
+  }
+  // main toggle
+  $scope.toggle = function (song, listOfSongs) {
+
+
+    if(PlayerFactory.isPlaying() && PlayerFactory.getCurrentSong() === song ){
+      PlayerFactory.pause();
+    }
+    else if (PlayerFactory.getCurrentSong() === song){
+      PlayerFactory.resume();
+    } 
+    else {
+      PlayerFactory.start(song, listOfSongs);
+    }
+  };
+
+  $scope.$on('viewSwap', function(event, data) {
+    console.log(data.albumId);
+    $scope.showMe = (data.name === 'oneAlbum');
+    if (data.name === 'oneAlbum'){
+      AlbumFactory.fetchById(data.albumId)
       .then(function (album) {
       
         album.imageUrl = '/api/albums/' + album.id + '/image';
@@ -29,42 +58,8 @@ juke.controller('AlbumCtrl', function ($scope, $http, $rootScope, $log, StatsFac
     })
     .catch($log.error);
 
-     
-    })
- 
-
-  $scope.playingSong = function () {
-    return PlayerFactory.getCurrentSong();
-  }
-
-  $scope.isPlaying = function () {
-    return PlayerFactory.isPlaying();
-  }
-  // main toggle
-  $scope.toggle = function (song, listOfSongs) {
-    // if ($scope.playing && song === $scope.currentSong) {
-    //   $rootScope.$broadcast('pause');
-    // } else {
-    //   $rootScope.$broadcast('play', song);
-    // }
-
-    if(PlayerFactory.isPlaying() && PlayerFactory.getCurrentSong() === song ){
-      PlayerFactory.pause();
     }
-    else if (PlayerFactory.getCurrentSong() === song){
-      PlayerFactory.resume();
-    } 
-    else {
-      PlayerFactory.start(song, listOfSongs);
-    }
-  };
-
-  // incoming events (from Player, toggle, or skip)
-  // $scope.$on('pause', pause);
-  // $scope.$on('play', play);
-  // $scope.$on('next', next);
-  // $scope.$on('prev', prev);
-
+  });
   // functionality
 
 
@@ -85,10 +80,15 @@ juke.controller('AlbumCtrl', function ($scope, $http, $rootScope, $log, StatsFac
 });
 
 juke.controller('AllCtrl', function($scope, $http, $rootScope, $log, AlbumFactory){
-  $rootScope.$on('showAllAlbums', function () {
-    $scope.showMe = true;
-    
-  })
+  $scope.$on('viewSwap', function (event, data) {
+    $scope.showMe = (data.name === 'allAlbums');
+    console.log($scope.showMe)
+  });
+
+  $scope.viewOneAlbum = function(id) {
+    $rootScope.$broadcast('viewSwap', { name: 'oneAlbum', albumId: id});
+  };
+
   AlbumFactory.fetchAll()
     .then(function (albums) {
      
